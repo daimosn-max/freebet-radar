@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#050507"><title>FREEBET RADAR</title>
+<style>
+:root{color-scheme:dark;--bg:#050507;--s1:#0e0e12;--s2:#16161c;--s3:#1e1e26;--bd:#24242d;--tx:#fff;--mu:#8b8b99;--ac:#7c3aff;--ac2:#a98bff;--glow:rgba(124,58,255,.35);--ok:#34d399;--bad:#f87171;--warn:#fbbf24}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(900px 420px at 85% -10%,rgba(124,58,255,.13),transparent 60%),var(--bg);color:var(--tx);font:15px/1.5 Inter,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--ac);border:0;padding:10px 16px;border-radius:12px;cursor:pointer;font-weight:600;transition:.18s;color:#fff;box-shadow:0 4px 18px -6px var(--glow)}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.btn.g{background:var(--s2);border:1px solid var(--bd);box-shadow:none;color:var(--tx)}.btn.g:hover{border-color:var(--ac)}
+.btn.d{background:#2a1215;color:var(--bad);box-shadow:none}.btn.s{padding:6px 11px;font-size:13px;border-radius:10px}.btn:disabled{opacity:.35;cursor:default;transform:none;filter:none}
+input,select,textarea{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:11px 14px;outline:0;font-size:16px}input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)}
+label{display:block;font-size:12px;color:var(--mu);margin:12px 0 4px}
+.logo{font-weight:800;letter-spacing:.14em;display:flex;align-items:center;gap:10px}.logo b{color:var(--ac2)}
+.mark{width:28px;height:28px;border-radius:9px;background:conic-gradient(from 210deg,#7c3aff,#c4b0ff,#7c3aff);display:grid;place-items:center;box-shadow:0 0 18px var(--glow)}.mark:after{content:"";width:10px;height:10px;border-radius:50%;background:var(--bg)}
+#lg{min-height:100vh;display:grid;place-items:center;padding:20px}
+.lb{width:100%;max-width:380px;background:var(--s1);border:1px solid var(--bd);border-radius:24px;padding:30px;animation:up .5s;box-shadow:0 30px 80px -30px var(--glow)}
+.err{color:var(--bad);font-size:13px;min-height:18px;margin-top:8px}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(52,211,153,.6)}100%{box-shadow:0 0 0 12px rgba(52,211,153,0)}}
+#app{display:none}
+aside{position:fixed;left:0;top:env(safe-area-inset-top,0px);bottom:0;width:236px;background:rgba(14,14,18,.92);backdrop-filter:blur(14px);border-right:1px solid var(--bd);padding:22px 14px;display:flex;flex-direction:column;gap:6px}
+aside .logo{padding:0 10px 20px;font-size:16px}
+#nv{display:flex;flex-direction:column;gap:4px}
+.nav{display:flex;gap:12px;align-items:center;padding:11px 12px;border-radius:12px;color:var(--mu);cursor:pointer;border:0;background:0;text-align:left;transition:.18s;position:relative}
+.nav:hover{background:var(--s2);color:var(--tx)}.nav.on{background:linear-gradient(90deg,rgba(124,58,255,.22),rgba(124,58,255,.05));color:#fff}.nav.on:before{content:"";position:absolute;left:-14px;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--ac)}.nav.on span{color:var(--ac2)}
+main{margin-left:236px;padding:28px;max-width:1240px;animation:up .4s}
+h1{font-size:26px;letter-spacing:-.02em;margin:0 0 4px}.sub{color:var(--mu);margin-bottom:18px}
+.demo{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);color:var(--warn);border-radius:14px;padding:10px 14px;font-size:13px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:18px;padding:16px;transition:.25s}.card:hover{border-color:#34344a}
+.stat{position:relative;overflow:hidden}.stat:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--c,var(--ac));opacity:.8}.stat .ic{position:absolute;right:14px;top:14px;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--s2);color:var(--c,var(--ac2));font-size:14px}
+.k{color:var(--mu);font-size:12px}.v{font-size:30px;font-weight:700;margin-top:2px;letter-spacing:-.02em}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.tag{font-size:11px;padding:3px 9px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);color:var(--mu);white-space:nowrap}
+.tag.ok{color:var(--ok);border-color:rgba(52,211,153,.3)}.tag.bad{color:var(--bad);border-color:rgba(248,113,113,.3)}.tag.ac{color:var(--ac2);border-color:rgba(124,58,255,.4)}.tag.w{color:var(--warn);border-color:rgba(251,191,36,.3)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--mu);display:inline-block;margin-right:8px}.dot.on{background:var(--ok);animation:pl 1.6s infinite}
+.big{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}.big .btn{padding:18px 10px;font-size:14px;letter-spacing:.04em;border-radius:16px}
+.code{font:700 15px ui-monospace,Menlo,monospace;color:var(--ac2);background:var(--s2);border:1px dashed #3a3a4a;padding:6px 11px;border-radius:10px;display:inline-block;cursor:pointer;margin:8px 0;word-break:break-all}.code.sm{margin:0;font-size:13px;padding:4px 9px}
+.li{padding:10px 0;border-bottom:1px solid var(--bd);font-size:14px}.li:last-child{border:0}.li small{color:var(--mu)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.chips .btn{padding:6px 12px;font-size:13px}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.tools select{width:auto;min-width:150px}
+.sbox{flex:1;min-width:200px;position:relative}.sbox span{position:absolute;left:13px;top:50%;transform:translateY(-52%);color:var(--mu);font-size:17px}.sbox input{padding-left:38px}
+.seg{display:flex;background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:3px}.seg button{border:0;background:0;padding:7px 13px;border-radius:9px;color:var(--mu);cursor:pointer;font-size:13px}.seg button.on{background:var(--ac);color:#fff}
+.tw{background:var(--s1);border:1px solid var(--bd);border-radius:18px;overflow:hidden;margin-bottom:12px}
+table.tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);font-weight:600;padding:12px 14px;background:var(--s2);border-bottom:1px solid var(--bd)}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--bd);vertical-align:middle}.tbl tr:last-child td{border:0}.tbl tbody tr{transition:.15s}.tbl tbody tr:hover{background:rgba(124,58,255,.06)}
+@media(min-width:801px){.tbl.cp .h{display:none}}.tbl td,.tbl th{white-space:nowrap}.tbl td:first-child{white-space:normal;min-width:110px}
+.bar{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--s2);margin:10px 0 8px}.bar i{display:block}
+.two{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;z-index:20}.modal.on{display:flex}
+.mb{background:var(--s1);border:1px solid var(--bd);border-radius:24px 24px 0 0;width:100%;max-width:560px;max-height:92vh;overflow:auto;padding:22px calc(22px + env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) 22px;animation:up .3s}
+.tb{display:none}.foot{color:var(--mu);font-size:12px;margin-top:22px}
+@media(min-width:700px){.modal{align-items:center}.mb{border-radius:24px}}
+@media(max-width:1000px){.two{grid-template-columns:1fr}}
+@media(max-width:800px){.tbl td,.tbl th{white-space:normal}aside{display:none}main{margin:0;padding:calc(14px + env(safe-area-inset-top,0px)) 14px calc(92px + env(safe-area-inset-bottom,0px))}h1{font-size:22px}
+.tb{display:flex;position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,18,.94);backdrop-filter:blur(14px);border-top:1px solid var(--bd);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around;z-index:10}.tb{overflow-x:auto;justify-content:flex-start}.tb .nav{flex-direction:column;gap:1px;font-size:9.5px;padding:6px 4px;flex:1 0 62px;align-items:center}.tb .nav.on:before{display:none}.tb .nav span{font-size:17px}
+.big{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.v{font-size:24px}
+.tw{background:none;border:0;overflow:visible}table.tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}.tbl thead{display:none}
+.tbl tr{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:8px 14px;margin-bottom:10px}.tbl td{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border:0;text-align:right}.tbl td[data-l]:before{content:attr(data-l);color:var(--mu);font-size:12px;text-align:left;flex:none}.tbl td:last-child{padding-top:10px}.tbl td:last-child .btn{width:100%;padding:10px}
+.sbox{min-width:100%}.tools select{flex:1}.seg{width:100%}.seg button{flex:1}}
+
+.pill{display:inline-block}.acts .btn{flex:0 0 auto}
+@media(max-width:800px){.tb .nav{flex:1 0 56px}}
+</style></head><body>
+<div id="lg"><form class="lb" id="lf"><div class="logo" style="font-size:20px"><i class="mark"></i><span>FREEBET <b>RADAR</b></span></div>
+<p style="color:var(--mu)">Вход для администратора</p>
+<label>Email</label><input id="em" type="email" autocomplete="username" autocapitalize="off">
+<label>Пароль</label><input id="pw" type="password" autocomplete="current-password">
+<div class="err" id="er"></div><button class="btn" style="width:100%;margin-top:6px" id="go">Войти</button></form></div>
+<div id="app"><aside><div class="logo"><i class="mark"></i><span>FREEBET <b>RADAR</b></span></div><div id="nv"></div><button class="btn g s" style="margin-top:auto" onclick="out()">Выйти</button></aside>
+<main id="mn"></main><div class="tb" id="tb"></div></div>
+<div class="modal" id="md" onclick="if(event.target===this)cm()"><div class="mb" id="mbx"></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const URL_="https://yqhjreuvbnaryiklmdgr.supabase.co",KEY="sb_publishable_hdE-eOmEWlByZU1TO7YZAg_ZSxxIFlY";
+const sb=window.supabase.createClient(URL_,KEY);
+const $=i=>document.getElementById(i);
+const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=t=>t?new Date(t).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"—";
+const stN={new:"Новое",review:"Не проверен",postponed:"Отложено",pending:"На проверке",confirmed:"Подтверждено",rejected:"Отклонено",expired:"Просрочено"},stC={new:"ac",review:"w",pending:"w",postponed:"",confirmed:"ok",rejected:"bad",expired:""};
+const connN={not_connected:"Не подключён",ok:"Подключён",error:"Ошибка"},connC={not_connected:"",ok:"ok",error:"bad"};
+let page="dash",q="",fc="all",fl="all",sf="all",offers=[],sources=[],cfg={scanner:{enabled:false},youtube_search:{enabled:false}},runs=[],mo=null,askFn=null,vw="tbl";
+
+/* --- утилиты --- */
+function toast(m){let t=$("ts");if(!t){t=document.createElement("div");t.id="ts";t.style.cssText="position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--s3);border:1px solid var(--bd);padding:10px 16px;border-radius:12px;z-index:50;max-width:90vw;font-size:14px";document.body.appendChild(t)}t.textContent=m;t.style.display="block";clearTimeout(t._t);t._t=setTimeout(()=>t.style.display="none",4000)}
+const fail=er=>{console.error(er);toast("Ошибка: "+(er&&er.message||er))};
+function cm(){mo=null;$("md").classList.remove("on")}
+function op(h){mo=null;$("mbx").innerHTML=h;$("md").classList.add("on")}
+function ask(msg,fn,yes){askFn=fn;op(`<div class="row"><b style="font-size:18px">Подтвердите действие</b><button class="btn g s" onclick="cm()">✕</button></div><p style="margin:12px 0">${e(msg)}</p><div class="acts"><button class="btn" onclick="cm();askFn()">${e(yes||"Да")}</button><button class="btn g" onclick="cm()">Отмена</button></div>`)}
+async function run(p){try{const r=await p;if(r&&r.error)throw r.error;return r}catch(er){fail(er);throw er}}
+async function audit(action,details){try{await sb.from("audit_log").insert({action,details})}catch(_){}}
+
+/* --- вход --- */
+async function isAdmin(){const{data:u}=await sb.auth.getUser();if(!u.user)return false;const{data}=await sb.from("admins").select("user_id").eq("user_id",u.user.id).maybeSingle();return !!data}
+$("lf").onsubmit=async ev=>{ev.preventDefault();$("er").textContent="";$("go").disabled=true;
+ const{error}=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});
+ if(error){$("er").textContent=/rate|too many/i.test(error.message)?"Слишком много попыток. Подождите несколько минут":"Неверный email или пароль";$("go").disabled=false;return}
+ if(!(await isAdmin())){await sb.auth.signOut();$("er").textContent="У этого пользователя нет прав администратора";$("go").disabled=false;return}
+ $("pw").value="";$("go").disabled=false;start()};
+async function out(){await sb.auth.signOut();$("app").style.display="none";$("lg").style.display="grid"}
+function start(){$("lg").style.display="none";$("app").style.display="block";
+ const it=[["dash","◧","Панель"],["feed","◎","Лента"],["rev","?","Проверка"],["ver","✔","Готово"],["src","⌖","Источники"],["law","⚖","Закон"]];
+ const h=it.map(i=>`<button class="nav" data-p="${i[0]}"><span>${i[1]}</span>${i[2]}</button>`).join("");$("nv").innerHTML=h;$("tb").innerHTML=h;
+ document.querySelectorAll(".nav[data-p]").forEach(b=>b.onclick=()=>{page=b.dataset.p;q="";render()});render()}
+
+/* --- загрузка данных --- */
+async function load(){
+ const[o,s,c,r]=await Promise.all([
+  sb.from("offers").select("*, offer_sources(url,channel,published_at,found_at,source:sources(name))").order("found_at",{ascending:false}).limit(1000),
+  sb.from("sources").select("*").order("name"),sb.from("settings").select("*"),
+  sb.from("scan_runs").select("*").order("started_at",{ascending:false}).limit(5)]);
+ for(const x of[o,s,c,r])if(x.error)throw x.error;
+ offers=o.data;sources=s.data;runs=r.data;c.data.forEach(x=>cfg[x.key]=x.value)}
+async function render(){
+ document.querySelectorAll(".nav[data-p]").forEach(b=>b.classList.toggle("on",b.dataset.p===page));
+ try{if(page!=="law")await load()}catch(er){$("mn").innerHTML=`<div class="card"><b>Не удалось загрузить данные</b><div class="k" style="margin-top:6px">${e(er.message||er)}</div></div>`;return}
+ const P={dash,feed:()=>offerPage("feed"),rev:()=>offerPage("rev"),ver:()=>offerPage("ver"),src:srcs,law};
+ $("mn").innerHTML=P[page]()+'<div class="foot">18+. Играйте ответственно. Условия бонусов и их законность в вашей стране проверяйте на официальных сайтах.</div>';
+ if(mo){const o=offers.find(x=>x.id===mo);if(o)$("mbx").innerHTML=mHead()+card(o);else cm()}}
+const cnt=s=>offers.filter(o=>o.status===s).length;
+
+/* --- панель --- */
+function dash(){
+ const k=(a,b,c)=>`<div class="card stat" style="--c:${c}"><div class="k">${a}</div><div class="v">${b}</div></div>`;
+ const on=sources.filter(s=>s.enabled).length,okc=sources.filter(s=>s.connection_status==="ok").length,err=sources.filter(s=>s.connection_status==="error").length;
+ const sc=cfg.scanner&&cfg.scanner.enabled,ys=cfg.youtube_search&&cfg.youtube_search.enabled,last=runs[0];
+ return`<h1>Панель администратора</h1><div class="sub">Поиск промокодов Free Bet в одном месте</div>
+ <div class="grid">${k("Всего найдено",offers.length,"#a98bff")}${k("Новые",cnt("new"),"#7c3aff")}${k("Требуют проверки",cnt("review"),"#fbbf24")}${k("Подтверждённые",cnt("confirmed"),"#34d399")}${k("Отклонённые",cnt("rejected"),"#f87171")}${k("Просроченные",cnt("expired"),"#8b8b99")}${k("Источники (подключено)",okc+" / "+sources.length,"#a98bff")}${k("Активных",on,"#a98bff")}</div>
+ <div class="card" style="margin-bottom:12px"><div class="row"><div><span class="dot ${sc?"on":""}"></span><b>Мониторинг</b><div class="k" style="margin-top:2px">Последний запуск: ${last&&last.finished_at?fmt(last.finished_at):"не выполнялся"}${last&&last.finished_at?" · проверено "+last.sources_checked+", найдено "+last.offers_found+", ошибок "+last.errors:""}</div></div><span class="tag ${sc?"ok":""}">${sc?"ВКЛЮЧЁН":"ВЫКЛЮЧЕН"}</span></div>
+ ${last&&last.note?`<div class="k" style="color:var(--warn);margin-top:6px">${e(last.note)}</div>`:""}${err?`<div class="k" style="color:var(--bad);margin-top:6px">Источников с ошибкой: ${err}</div>`:""}
+ ${on===0?'<div class="k" style="color:var(--warn);margin-top:6px">Нет активных источников. Подтвердите, подключите и включите источник на вкладке «Источники».</div>':""}
+ <div class="big" style="margin:12px 0 0"><button class="btn" ${sc?"disabled":""} onclick="setScan(true)">Запустить мониторинг</button><button class="btn g" ${sc?"":"disabled"} onclick="setScan(false)">Остановить</button></div>
+ <button class="btn g" style="width:100%;margin-top:10px" ${sc&&on?"":"disabled"} onclick="scanNow(this)">Проверить сейчас</button></div>
+ <div class="card"><div class="row"><div><b>Поиск по YouTube</b><div class="k">Официальный поиск тратит квоту API (100 единиц за запрос). Нужен ключ YouTube.</div></div><span class="tag ${ys?"ok":""}">${ys?"ВКЛЮЧЁН":"ВЫКЛЮЧЕН"}</span></div><button class="btn g s" style="margin-top:10px" onclick="setYS(${!ys})">${ys?"Выключить":"Включить"}</button></div>
+ ${offers.length===0?'<div class="card k" style="margin-top:12px">Находок пока нет. Промокоды появятся только если сканер реально нашёл их в подключённых источниках, либо добавьте вручную.</div>':""}`}
+async function setScan(v){await run(sb.from("settings").upsert({key:"scanner",value:{enabled:v}}));await audit("scanner",{enabled:v});render()}
+async function setYS(v){await run(sb.from("settings").upsert({key:"youtube_search",value:{...cfg.youtube_search,enabled:v}}));render()}
+async function scanNow(b){b.disabled=true;b.textContent="Проверяю…";try{const{data,error}=await sb.functions.invoke("scan-sources");if(error)throw error;toast(data.skipped||`Проверено: ${data.checked}, найдено: ${data.found}, ошибок: ${data.errors}`)}catch(er){fail(er)}render()}
+
+/* --- предложения --- */
+const FF=[["all","Все",()=>1],["new","Новые",o=>o.status==="new"],["pending","На проверке",o=>o.status==="pending"],["confirmed","Подтверждённые",o=>o.status==="confirmed"],["expired","Просроченные",o=>o.status==="expired"]];
+function base(w){return w==="feed"?offers.filter(o=>!["rejected","review","postponed"].includes(o.status)):w==="rev"?offers.filter(o=>o.status==="review"||o.status==="postponed"):offers.filter(o=>o.status==="confirmed")}
+function offerPage(w){
+ const B=base(w),L=B.filter(o=>w!=="feed"||(FF.find(f=>f[0]===fl)||FF[0])[2](o)).filter(o=>(fc==="all"||o.bookmaker_name===fc)&&(!q||(o.bookmaker_name+" "+o.code+" "+(o.title||"")).toLowerCase().includes(q.toLowerCase())));
+ const T={feed:["Найденные промокоды","В ленте только предложения типа Free Bet. Сомнительные находки попадают в раздел «Проверка»."],rev:["Требует проверки","Система не уверена в типе предложения. В ленту они не попадают, пока вы не подтвердите их вручную."],ver:["Проверенные промокоды","Только то, что вы подтвердили сами. В каталог попадает лишь добавленное вручную."]}[w];
+ const cs=[...new Set(B.map(o=>o.bookmaker_name))].sort();
+ return`<div class="row" style="margin-bottom:14px;flex-wrap:wrap"><div><h1>${T[0]}</h1><div class="sub" style="margin:0">${T[1]}</div></div><div class="acts" style="margin:0"><button class="btn g" onclick="chkT()">Проверить текст</button><button class="btn" onclick="addO()">+ Вручную</button></div></div>
+ <div class="tools"><div class="sbox"><span>⌕</span><input id="qi" type="search" placeholder="Поиск: букмекер, код" value="${e(q)}" oninput="sq(this.value)"></div><select onchange="fc=this.value;render()"><option value="all">Все букмекеры</option>${cs.map(c=>`<option ${fc===c?"selected":""} value="${e(c)}">${e(c)}</option>`).join("")}</select></div>
+ ${w==="feed"?`<div class="chips">${FF.map(f=>`<button class="btn ${fl===f[0]?"":"g"}" onclick="fl='${f[0]}';render()">${f[1]} ${B.filter(f[2]).length}</button>`).join("")}</div>`:""}
+ `+(L.length?table(L):`<div class="card k">${B.length?"По этому фильтру ничего нет.":w==="rev"?"Нет предложений, требующих проверки.":"Предложений нет. Они появятся, когда сканер найдёт реальные промокоды в подключённых источниках, либо добавьте вручную."}</div>`)}
+function sq(v){q=v;clearTimeout(window._q);window._q=setTimeout(()=>{render().then(()=>{const i=$("qi");if(i){i.focus();i.setSelectionRange(v.length,v.length)}})},300)}
+function table(L){return`<div class="tw"><table class="tbl"><thead><tr><th>Букмекер</th><th>Промокод</th><th>Размер</th><th>Найдено</th><th>Срок</th><th>Статус</th><th></th></tr></thead><tbody>${L.map(o=>`<tr><td data-l="Букмекер"><b>${e(o.bookmaker_name)}</b>${o.in_catalog?' <span class="tag ok">каталог</span>':""}</td><td data-l="Код"><span class="code sm" data-c="${e(o.code)}" onclick="cp(this)">${e(o.code)}</span></td><td data-l="Размер">${e(o.amount||"не указан")}</td><td data-l="Найдено">${fmt(o.found_at)}</td><td data-l="Срок">${o.expires_at?"до "+fmt(o.expires_at):"не указан"}</td><td data-l="Статус"><span class="tag ${stC[o.status]}">${stN[o.status]}</span></td><td><button class="btn g s" onclick="mng('${o.id}')">Управление</button></td></tr>`).join("")}</tbody></table></div>`}
+function cp(b){const c=b.dataset.c;try{navigator.clipboard.writeText(c).then(()=>toast("Скопировано: "+c),()=>toast(c))}catch(_){toast(c)}}
+const mHead=()=>`<div class="row" style="margin-bottom:10px"><b style="font-size:18px">Предложение</b><button class="btn g s" onclick="cm()">✕</button></div>`;
+function mng(i){const o=offers.find(x=>x.id===i);if(!o)return;op(mHead()+card(o));mo=i}
+function card(o){const L=o.offer_sources||[],i=o.id,b=(t,f,c="g")=>`<button class="btn ${c} s" onclick="${f}">${t}</button>`;let h="";
+ if(o.status!=="confirmed"&&o.status!=="expired")h+=b("Подтвердить",`conf('${i}')`,"");
+ if(o.status==="confirmed")h+=b(o.in_catalog?"Убрать из каталога":"Добавить в каталог",`cat('${i}',${!o.in_catalog})`,"");
+ if(o.status==="postponed")h+=b("Вернуть на проверку",`setSt('${i}','review')`);
+ if(o.status==="confirmed")h+=b("Снять подтверждение",`setSt('${i}','review')`);else if(o.status!=="rejected")h+=b("Отклонить",`setSt('${i}','rejected')`);
+ if(o.status==="new"||o.status==="review")h+=b("Отложить на сутки",`setSt('${i}','postponed')`);
+ h+=b("Редактировать",`edO('${i}')`)+b("Удалить",`delO('${i}')`,"d");
+ return`<div class="row"><b style="font-size:17px">${e(o.bookmaker_name)}</b><span class="tag ${stC[o.status]}">${stN[o.status]}</span></div>
+ <div class="code" data-c="${e(o.code)}" onclick="cp(this)">${e(o.code)}</div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 14px"><div><div class="k">Тип бонуса</div>${e(o.bonus_type||(o.status==="review"?"Не определён, нужна проверка":"Free Bet (бесплатная ставка)"))}</div><div><div class="k">Размер</div>${e(o.amount||"не указан")}</div><div><div class="k">Дата обнаружения</div>${fmt(o.found_at)}</div><div><div class="k">Срок</div>${o.expires_at?"до "+fmt(o.expires_at):"не указан"}</div></div>
+ ${o.evidence?`<div class="k" style="margin-top:10px">Контекст: «${e(o.evidence)}»</div>`:""}${(o.filter_notes||[]).length?`<div class="k">Фильтр: ${e(o.filter_notes.join("; "))}</div>`:""}
+ <div class="k" style="margin-top:10px">Найдено в источниках: ${L.length}</div>${L.map(l=>`<div class="li" style="padding:6px 0;font-size:13px">${e(l.source?l.source.name:"—")}${l.channel?" · "+e(l.channel):""} · ${fmt(l.found_at)}${(l.url||"").startsWith("https://")?` · <a href="${e(l.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--ac2)">ссылка</a>`:""}</div>`).join("")}
+ <div class="acts" style="margin-top:12px">${h}</div>`}
+async function setSt(i,s){const p={status:s};if(s==="confirmed")p.verified_at=new Date().toISOString();else{p.in_catalog=false;p.verified_at=null}if(s==="postponed")p.postponed_until=new Date(Date.now()+864e5).toISOString();
+ await run(sb.from("offers").update(p).eq("id",i));await audit("offer_status",{id:i,status:s});render()}
+function conf(i){const o=offers.find(x=>x.id===i);if(o.status==="review")ask("Фильтр не смог точно определить тип бонуса. Подтвердить как Free Bet?",()=>setSt(i,"confirmed"),"Подтвердить");else setSt(i,"confirmed")}
+async function cat(i,v){await run(sb.from("offers").update({in_catalog:v}).eq("id",i));render()}
+function delO(i){ask("Удалить предложение безвозвратно?",async()=>{await run(sb.from("offers").delete().eq("id",i));render()},"Удалить")}
+function edO(i){const o=offers.find(x=>x.id===i);op(`<div class="row"><b style="font-size:18px">Редактирование</b><button class="btn g s" onclick="cm()">✕</button></div>
+ <label>Букмекер</label><input id="ec" value="${e(o.bookmaker_name)}"><label>Промокод</label><input id="eo" value="${e(o.code==="—"?"":o.code)}"><label>Тип бонуса</label><input id="eb" value="${e(o.bonus_type||"")}" placeholder="Free Bet"><label>Размер бесплатной ставки</label><input id="ea" value="${e(o.amount||"")}"><label>Срок действия</label><input id="ee" type="date" value="${o.expires_at?o.expires_at.slice(0,10):""}"><div class="err" id="eer"></div><button class="btn" style="width:100%" onclick="svE('${i}')">Сохранить</button>`)}
+async function svE(i){const c=$("ec").value.trim();if(!c){$("eer").textContent="Укажите букмекера";return}const d=$("ee").value;
+ await run(sb.from("offers").update({bookmaker_name:c,code:$("eo").value.replace(/[^A-Za-z0-9_-]/g,"")||"—",bonus_type:$("eb").value.trim()||null,amount:$("ea").value.trim()||null,expires_at:d?d+"T23:59:59Z":null}).eq("id",i));cm();render()}
+function addO(){op(`<div class="row"><b style="font-size:18px">Новое предложение</b><button class="btn g s" onclick="cm()">✕</button></div>
+ <label>Букмекер</label><input id="oc" list="cl"><datalist id="cl">${[...new Set(sources.map(s=>s.name.replace(/ \(.*\)$/,"")))].map(c=>`<option value="${e(c)}">`).join("")}</datalist>
+ <label>Промокод</label><input id="oo" autocapitalize="characters"><label>Описание</label><input id="ot" placeholder="Free Bet на первую ставку"><label>Ссылка на публикацию (необязательно)</label><input id="ou" placeholder="https://"><label>Действует до</label><input id="oe" type="date"><div class="err" id="oer"></div><button class="btn" style="width:100%" onclick="saveO()">Добавить</button>`)}
+async function saveO(){const c=$("oc").value.trim(),code=$("oo").value.trim().replace(/[^A-Za-z0-9_-]/g,"").toUpperCase(),t=$("ot").value.trim(),u=$("ou").value.trim();
+ if(!c||!code||!/free\s?bet|фрибет|бесплатн/i.test(t)){$("oer").textContent="Нужны букмекер, код и описание со словами «Free Bet», «фрибет» или «бесплатная ставка»";return}
+ if(u&&!/^https:\/\/\S+$/.test(u)){$("oer").textContent="Ссылка должна начинаться с https://";return}
+ const x=$("oe").value,{data,error}=await sb.from("offers").insert({dedupe_key:c.toLowerCase()+"|"+code,bookmaker_name:c,code,title:t,status:"new",expires_at:x?x+"T23:59:59Z":null}).select("id").single();
+ if(error){$("oer").textContent=error.code==="23505"?"Такой промокод у этого букмекера уже есть":error.message;return}
+ await sb.from("offer_sources").insert({offer_id:data.id,url:u||null,channel:"Вручную"});cm();render()}
+
+/* --- фильтр текста --- */
+const fPOS=/фри\s?бет|free\s?-?bet|бесплатн\w*\s+став/i,fNEG=[["бонус за депозит",/депозит|пополнен|deposit|welcome\s+bonus|приветственн\w*\s+бонус/i],["казино",/казино|casino|слот|slots?\b|free\s?spins?|фриспин|покер|рулетк/i],["кэшбэк",/кэшбэк|кешбэк|кэшбек|cash\s?-?back/i],["страховка/ставка без риска",/страховк|без\s+риска|risk[\s-]?free|insur|возврат\s+(?:проигранн|ставк)/i],["скидка",/скидк|discount|распродаж/i],["реферальный бонус",/реферал|пригласи\w*\s+друг|приведи\w*\s+друг|refer(?:ral)?\b/i],["фрибонус/бонус",/фри\s?бонус|free\s?bonus|бонус\w*\s+(?:на|за|до)\s/i]],fACT=/получ|актив|введ|использ|заберит|воспользу|claim|use\s|enter|apply|redeem/i,fDEAD=/истёк|истек|закончил|не\s+действует|больше\s+не|expired|no\s+longer/i,fSTOP=new Set(["FREE","FREEBET","BONUS","CASINO","SPORT","PROMO","CODE","BETS","BETTING"]),fCODE=/(?:[Пп]ромо-?код\w*|ПРОМОКОД|[Pp]romo\s?[Cc]ode|PROMO\s?CODE|[Кк]од|[Cc]ode|CODE)\s*[:\-–—]?\s*["«“'`]?([A-Z0-9]{4,20})(?![A-Za-zА-Яа-я0-9])/g;
+function fexp(t){const m=t.match(/(?:до|until|till)\s+(\d{1,2})[./](\d{1,2})[./](\d{2,4})/i);if(m){let y=+m[3];if(y<100)y+=2000;return new Date(y,m[2]-1,+m[1],23,59,59).getTime()}return 0}
+function fcls(w){const t=w.replace(/без\s+(?:депозита|пополнения|вложений)/gi,"");if(!fPOS.test(t))return{v:"reject",why:["нет признаков Free Bet"]};const x=fexp(w);if((x&&x<Date.now())||fDEAD.test(w))return{v:"reject",why:["неактуально"]};const n=fNEG.filter(a=>a[1].test(t)).map(a=>a[0]);if(n.length)return{v:"review",why:["рядом упоминается: "+n.join(", ")]};if(!fACT.test(t))return{v:"review",why:["не ясно, что это действующее предложение"]};return{v:"ok",why:["Free Bet + код + условия активации, посторонних бонусов не найдено"]}}
+function chkT(){op(`<div class="row"><b style="font-size:18px">Проверка текста фильтром</b><button class="btn g s" onclick="cm()">✕</button></div><div class="k" style="margin:8px 0">Вставьте описание видео или текст акции: фильтр покажет, пройдёт ли код.</div><textarea id="tt" rows="6"></textarea><button class="btn" style="width:100%;margin:10px 0" onclick="runT()">Проверить</button><div id="tr"></div>`)}
+function runT(){const t=$("tt").value,r=[],seen=new Set();let m;fCODE.lastIndex=0;while((m=fCODE.exec(t))){const c=m[1];if(fSTOP.has(c)||!/[A-Z]/.test(c)||seen.has(c))continue;seen.add(c);const x=fcls(t.slice(Math.max(0,m.index-250),m.index+350));r.push(`<div class="li"><b>${e(c)}</b> <span class="tag ${x.v==="ok"?"ok":x.v==="review"?"w":"bad"}">${x.v==="ok"?"Проходит фильтр":x.v==="review"?"Требует проверки":"Исключено"}</span><br><small>${e(x.why.join("; "))}</small></div>`)}$("tr").innerHTML=r.join("")||'<div class="k">Промокод в тексте не найден: предложение не создаётся</div>'}
+
+/* --- источники --- */
+const FREQ=[[15,"15 мин"],[30,"30 мин"],[60,"1 час"],[180,"3 часа"],[360,"6 часов"],[1440,"24 часа"]];
+const catOf=s=>s.kind==="youtube"?"YouTube-канал":s.official?"Официальный сайт букмекера":"Сайт / страница акций";
+function srcs(){const SF=[["all","Все",()=>1],["off","Официальные сайты",s=>s.official],["site","Сайты",s=>s.kind==="site"&&!s.official],["yt","YouTube",s=>s.kind==="youtube"]];
+ const cur=SF.find(f=>f[0]===sf)||SF[0],L=sources.filter(cur[2]),pend=sources.filter(s=>!s.verified).length;
+ return`<div class="row" style="margin-bottom:14px;flex-wrap:wrap"><div><h1>Источники</h1><div class="sub" style="margin:0">Ожидают проверки: ${pend}. Источник сначала подтверждается, затем подключается. Пока он не подключён, сканер его не проверяет.</div></div><button class="btn" onclick="addS()">+ Добавить</button></div>
+ <div class="chips">${SF.map(f=>`<button class="btn ${sf===f[0]?"":"g"}" onclick="sf='${f[0]}';render()">${f[1]} ${sources.filter(f[2]).length}</button>`).join("")}</div>`+(L.map(sCard).join("")||'<div class="card k">Источников нет.</div>')}
+function sCard(s){const i=s.id,okc=s.verified&&s.connection_status==="ok",b=(t,f,c="g",d=0)=>`<button class="btn ${c} s" ${d?"disabled":""} onclick="${f}">${t}</button>`;
+ return`<div class="card" style="margin-bottom:10px"><div class="row"><div style="min-width:0"><b>${e(s.name)}</b><div class="k" style="word-break:break-all">${e(s.url)}</div></div><div style="display:grid;gap:4px;justify-items:end"><span class="tag ac">${catOf(s)}</span><span class="tag ${s.verified?"ok":"w"}">${s.verified?"Проверен":"Ожидает проверки"}</span><span class="tag ${connC[s.connection_status]}">${connN[s.connection_status]}</span><span class="tag ${s.enabled?"ok":""}">${s.enabled?"Активен":"Выключен"}</span></div></div>
+ <div class="k" style="margin-top:8px">Последнее сканирование: ${s.last_checked_at?fmt(s.last_checked_at):"ещё не было"}</div>${s.last_error?`<div class="err" style="min-height:0;margin:6px 0">Ошибка: ${e(s.last_error)}${s.error_count>1?" (подряд: "+s.error_count+")":""}</div>`:""}
+ <div class="row" style="margin-top:8px;justify-content:flex-start"><span class="k">Частота:</span><select onchange="setF('${i}',this.value)" style="width:auto">${FREQ.map(f=>`<option value="${f[0]}" ${s.check_interval_min===f[0]?"selected":""}>каждые ${f[1]}</option>`).join("")}</select></div>
+ <div class="acts">${!s.verified?b("Подтвердить источник",`upS('${i}',{verified:true})`,""):b("Вернуть на проверку",`upS('${i}',{verified:false,enabled:false})`)}${s.verified&&s.connection_status!=="ok"?b("Подключить",`conS('${i}')`,""):""}${b(s.enabled?"Выключить":"Включить",`upS('${i}',{enabled:${!s.enabled}})`,"g",!okc)}${b("Удалить",`delS('${i}')`,"d")}</div></div>`}
+async function upS(i,p){await run(sb.from("sources").update(p).eq("id",i));render()}
+async function setF(i,v){await run(sb.from("sources").update({check_interval_min:+v}).eq("id",i));render()}
+function delS(i){ask("Удалить источник? Уже найденные предложения останутся.",async()=>{await run(sb.from("sources").delete().eq("id",i));render()},"Удалить")}
+function parseYT(t){t=t.trim();let m;if(/^UC[\w-]{22}$/.test(t))return{ch:t};if(/^@[\w.\-]{3,}$/.test(t))return{h:t};try{const u=new URL(t.includes("://")?t:"https://"+t);if(/(^|\.)youtube\.com$/.test(u.hostname)){m=u.pathname.match(/^\/channel\/(UC[\w-]{22})/);if(m)return{ch:m[1]};m=u.pathname.match(/^\/(@[\w.\-]+)/);if(m)return{h:m[1]}}}catch(_){}return null}
+async function conS(i){const s=sources.find(x=>x.id===i);if(s.kind!=="youtube"){await upS(i,{connection_status:"ok",last_error:null});return}
+ const p=parseYT(s.url);try{const{data,error}=await sb.functions.invoke("youtube-resolve",{body:{source_id:i,channel_id:p&&p.ch,handle:p&&p.h}});if(error)throw error;toast(data.ok?"Канал подключён: "+data.title:"Не удалось: "+data.error)}catch(er){toast("Не удалось подключить. Проверьте ключ YouTube в секретах Supabase")}render()}
+function addS(){op(`<div class="row"><b style="font-size:18px">Новый источник</b><button class="btn g s" onclick="cm()">✕</button></div><label>Тип</label><select id="sk"><option value="site">Сайт / страница акций</option><option value="youtube">YouTube-канал</option></select><label>Ссылка</label><input id="su" placeholder="https://"><label>Название</label><input id="sn"><div class="err" id="ser"></div><button class="btn" style="width:100%" onclick="saveS()">Добавить (статус: не подключён)</button>`)}
+async function saveS(){const k=$("sk").value;let u=$("su").value.trim();
+ if(k==="youtube"){const p=parseYT(u);if(!p){$("ser").textContent="Нужна ссылка youtube.com/@имя, youtube.com/channel/UC… либо ID канала";return}u=p.ch?"https://www.youtube.com/channel/"+p.ch:"https://www.youtube.com/"+p.h}
+ else if(!/^https:\/\/\S+$/.test(u)){$("ser").textContent="Ссылка должна начинаться с https://";return}
+ let n=$("sn").value.trim();if(!n){try{n=new URL(u).host}catch(_){n=u}}
+ const{error}=await sb.from("sources").insert({kind:k,url:u,name:n});if(error){$("ser").textContent=error.code==="23505"?"Такой источник уже добавлен":error.message;return}cm();render()}
+
+/* --- закон --- */
+const LAW={RU:["Россия","Реклама азартных игр и букмекерских услуг жёстко регулируется (ФЗ «О рекламе», ст. 27, и закон об азартных играх). Публикация промокодов третьими лицами может считаться рекламой. Продвигать допустимо только легальных операторов."],KZ:["Казахстан","Реклама азартных игр и пари ограничена законом. Публикация промокодов может считаться рекламой: проконсультируйтесь с юристом."],BY:["Беларусь","Реклама азартных игр и ставок ограничена законом; допускается только для лицензированных операторов."],UA:["Украина","Деятельность и реклама регулируются отдельным законом об азартных играх и лицензированием."],GB:["Великобритания","Операторы лицензируются UKGC; реклама подчиняется правилам ASA/CAP: только 18+, без вводящих в заблуждение условий."],US:["США","Регулирование по штатам: в части штатов ставки и их реклама запрещены или требуют лицензии. Нужна геопроверка и анализ каждого штата."],XX:["Другая страна","Проверьте местные требования к лицензированию, рекламе и возрасту до публикации."]};
+const LCK=["Собираем только общедоступные данные и используем официальные API (YouTube Data API) вместо скрапинга.","Уважаем robots.txt и условия использования источников.","Публичная часть показывает предложения только в разрешённых юрисдикциях и только лицензированных операторов.","Везде возрастной маркер 18+ и предупреждение об ответственной игре.","Каждый промокод проходит ручную модерацию перед публикацией.","Храним ссылку на оригинал и дату обнаружения.","Юрист подтвердил допустимость публикации в целевой стране."];
+const ls=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(_){return d}},ss=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
+function law(){const c=ls("fbr_country","RU"),d=ls("fbr_law",{});return`<h1>Законность и ограничения</h1><div class="sub">Справочная памятка, не юридическая консультация.</div>
+ <div class="card" style="margin-bottom:12px"><select onchange="ss('fbr_country',this.value);render()">${Object.keys(LAW).map(k=>`<option value="${k}" ${k===c?"selected":""}>${LAW[k][0]}</option>`).join("")}</select><div class="demo" style="margin:12px 0 0">${e(LAW[c][1])}<br><b>Требования меняются. Получите заключение юриста по этой стране.</b></div></div>
+ <div class="card"><b>Чек-лист</b>${LCK.map((t,i)=>`<label style="display:flex;gap:10px;align-items:flex-start;color:var(--tx);font-size:14px;margin:12px 0 0"><input type="checkbox" style="width:20px;height:20px;margin-top:2px;flex:none" ${d[i]?"checked":""} onchange="const x=ls('fbr_law',{});x[${i}]=this.checked;ss('fbr_law',x)"><span>${t}</span></label>`).join("")}</div>`}
+
+/* --- старт: восстановить сессию --- */
+(async()=>{try{const{data}=await sb.auth.getSession();if(data.session&&await isAdmin())start()}catch(_){}})();
+</script></body></html>
