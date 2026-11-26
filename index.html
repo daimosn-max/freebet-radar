@@ -65,6 +65,15 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl th{text-align:
 
 .pill{display:inline-block}.acts .btn{flex:0 0 auto}
 @media(max-width:800px){.tb .nav{flex:1 0 56px}}
+
+/* --- список как тетрадь в линейку --- */
+.nb{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative;margin-bottom:12px}
+.nb:before{content:"";position:absolute;top:0;bottom:0;left:14px;width:1px;background:rgba(124,58,255,.5);pointer-events:none}
+.nr{display:flex;align-items:center;gap:10px;min-height:46px;padding:0 12px 0 28px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .15s}
+.nr:last-child{border-bottom:0}.nr:hover,.nr:focus-visible{background:rgba(124,58,255,.08);outline:0}.nr:active{background:rgba(124,58,255,.16)}
+.nc{font:700 12.5px ui-monospace,Menlo,monospace;color:var(--ac2);background:var(--s2);border:1px dashed #3a3a4a;padding:2px 8px;border-radius:8px;flex:none;max-width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nm{flex:1;min-width:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nr .tag{flex:none;font-size:10.5px;padding:2px 8px}
 </style></head><body>
 <div id="lg"><form class="lb" id="lf"><div class="logo" style="font-size:20px"><i class="mark"></i><span>FREEBET <b>RADAR</b></span></div>
 <p style="color:var(--mu)">Вход для администратора</p>
@@ -153,7 +162,7 @@ function offerPage(w){
  ${w==="feed"?`<div class="chips">${FF.map(f=>`<button class="btn ${fl===f[0]?"":"g"}" onclick="fl='${f[0]}';render()">${f[1]} ${B.filter(f[2]).length}</button>`).join("")}</div>`:""}
  `+(L.length?table(L):`<div class="card k">${B.length?"По этому фильтру ничего нет.":w==="rev"?"Нет предложений, требующих проверки.":"Предложений нет. Они появятся, когда сканер найдёт реальные промокоды в подключённых источниках, либо добавьте вручную."}</div>`)}
 function sq(v){q=v;clearTimeout(window._q);window._q=setTimeout(()=>{render().then(()=>{const i=$("qi");if(i){i.focus();i.setSelectionRange(v.length,v.length)}})},300)}
-function table(L){return`<div class="tw"><table class="tbl"><thead><tr><th>Букмекер</th><th>Промокод</th><th>Размер</th><th>Найдено</th><th>Срок</th><th>Статус</th><th></th></tr></thead><tbody>${L.map(o=>`<tr><td data-l="Букмекер"><b>${e(o.bookmaker_name)}</b>${o.in_catalog?' <span class="tag ok">каталог</span>':""}</td><td data-l="Код"><span class="code sm" data-c="${e(o.code)}" onclick="cp(this)">${e(o.code)}</span></td><td data-l="Размер">${e(o.amount||"не указан")}</td><td data-l="Найдено">${fmt(o.found_at)}</td><td data-l="Срок">${o.expires_at?"до "+fmt(o.expires_at):"не указан"}</td><td data-l="Статус"><span class="tag ${stC[o.status]}">${stN[o.status]}</span></td><td><button class="btn g s" onclick="mng('${o.id}')">Управление</button></td></tr>`).join("")}</tbody></table></div>`}
+function table(L){return`<div class="nb">${L.map(o=>`<div class="nr" role="button" tabindex="0" onclick="mng('${o.id}')" onkeydown="if(event.key==='Enter')mng('${o.id}')"><span class="nc">${e(o.code)}</span><span class="nm">${e(o.bookmaker_name)}</span><span class="tag ${stC[o.status]}">${stN[o.status]}</span></div>`).join("")}</div>`}
 function cp(b){const c=b.dataset.c;try{navigator.clipboard.writeText(c).then(()=>toast("Скопировано: "+c),()=>toast(c))}catch(_){toast(c)}}
 const mHead=()=>`<div class="row" style="margin-bottom:10px"><b style="font-size:18px">Предложение</b><button class="btn g s" onclick="cm()">✕</button></div>`;
 function mng(i){const o=offers.find(x=>x.id===i);if(!o)return;op(mHead()+card(o));mo=i}
@@ -198,8 +207,9 @@ function runT(){const t=$("tt").value,r=[],seen=new Set();let m;fCODE.lastIndex=
 
 /* --- источники --- */
 const FREQ=[[15,"15 мин"],[30,"30 мин"],[60,"1 час"],[180,"3 часа"],[360,"6 часов"],[1440,"24 часа"]];
-const catOf=s=>s.kind==="youtube"?"YouTube-канал":s.official?"Официальный сайт букмекера":"Сайт / страница акций";
-function srcs(){const SF=[["all","Все",()=>1],["off","Официальные сайты",s=>s.official],["site","Сайты",s=>s.kind==="site"&&!s.official],["yt","YouTube",s=>s.kind==="youtube"]];
+const isTg=s=>/^https:\/\/t\.me\//.test(s.url||"");
+const catOf=s=>s.kind==="youtube"?"YouTube-канал":isTg(s)?"Telegram-канал":s.official?"Официальный сайт букмекера":"Сайт / страница акций";
+function srcs(){const SF=[["all","Все",()=>1],["off","Официальные сайты",s=>s.official],["site","Сайты",s=>s.kind==="site"&&!s.official&&!isTg(s)],["tg","Telegram",isTg],["yt","YouTube",s=>s.kind==="youtube"]];
  const cur=SF.find(f=>f[0]===sf)||SF[0],L=sources.filter(cur[2]),pend=sources.filter(s=>!s.verified).length;
  return`<div class="row" style="margin-bottom:14px;flex-wrap:wrap"><div><h1>Источники</h1><div class="sub" style="margin:0">Ожидают проверки: ${pend}. Источник сначала подтверждается, затем подключается. Пока он не подключён, сканер его не проверяет.</div></div><button class="btn" onclick="addS()">+ Добавить</button></div>
  <div class="chips">${SF.map(f=>`<button class="btn ${sf===f[0]?"":"g"}" onclick="sf='${f[0]}';render()">${f[1]} ${sources.filter(f[2]).length}</button>`).join("")}</div>`+(L.map(sCard).join("")||'<div class="card k">Источников нет.</div>')}
@@ -214,12 +224,14 @@ function delS(i){ask("Удалить источник? Уже найденные
 function parseYT(t){t=t.trim();let m;if(/^UC[\w-]{22}$/.test(t))return{ch:t};if(/^@[\w.\-]{3,}$/.test(t))return{h:t};try{const u=new URL(t.includes("://")?t:"https://"+t);if(/(^|\.)youtube\.com$/.test(u.hostname)){m=u.pathname.match(/^\/channel\/(UC[\w-]{22})/);if(m)return{ch:m[1]};m=u.pathname.match(/^\/(@[\w.\-]+)/);if(m)return{h:m[1]}}}catch(_){}return null}
 async function conS(i){const s=sources.find(x=>x.id===i);if(s.kind!=="youtube"){await upS(i,{connection_status:"ok",last_error:null});return}
  const p=parseYT(s.url);try{const{data,error}=await sb.functions.invoke("youtube-resolve",{body:{source_id:i,channel_id:p&&p.ch,handle:p&&p.h}});if(error)throw error;toast(data.ok?"Канал подключён: "+data.title:"Не удалось: "+data.error)}catch(er){toast("Не удалось подключить. Проверьте ключ YouTube в секретах Supabase")}render()}
-function addS(){op(`<div class="row"><b style="font-size:18px">Новый источник</b><button class="btn g s" onclick="cm()">✕</button></div><label>Тип</label><select id="sk"><option value="site">Сайт / страница акций</option><option value="youtube">YouTube-канал</option></select><label>Ссылка</label><input id="su" placeholder="https://"><label>Название</label><input id="sn"><div class="err" id="ser"></div><button class="btn" style="width:100%" onclick="saveS()">Добавить (статус: не подключён)</button>`)}
-async function saveS(){const k=$("sk").value;let u=$("su").value.trim();
+function addS(){op(`<div class="row"><b style="font-size:18px">Новый источник</b><button class="btn g s" onclick="cm()">✕</button></div><label>Тип</label><select id="sk" onchange="$('su').placeholder=this.value==='telegram'?'@имя или t.me/имя':this.value==='youtube'?'youtube.com/@имя':'https://'"><option value="telegram">Telegram-канал</option><option value="youtube">YouTube-канал</option><option value="site">Сайт / страница акций</option></select><label>Ссылка или @имя</label><input id="su" placeholder="@имя или t.me/имя" autocapitalize="off"><label>Название</label><input id="sn"><div class="err" id="ser"></div><button class="btn" style="width:100%" onclick="saveS()">Добавить (статус: не подключён)</button>`)}
+function parseTG(t){t=t.trim();let m=t.match(/^@?([A-Za-z][\w]{3,31})$/);if(m)return m[1];try{const u=new URL(t.includes("://")?t:"https://"+t);if(/^(www\.)?t\.me$/.test(u.hostname)){m=u.pathname.match(/^\/(?:s\/)?([A-Za-z][\w]{3,31})(?:\/|$)/);if(m&&m[1].toLowerCase()!=="joinchat")return m[1]}}catch(_){}return null}
+async function saveS(){const k=$("sk").value;let u=$("su").value.trim(),tg="";
+ if(k==="telegram"){tg=parseTG(u);if(!tg){$("ser").textContent="Нужен публичный канал: @имя или t.me/имя. Ссылки-приглашения (t.me/+…) не читаются";return}u="https://t.me/s/"+tg}else
  if(k==="youtube"){const p=parseYT(u);if(!p){$("ser").textContent="Нужна ссылка youtube.com/@имя, youtube.com/channel/UC… либо ID канала";return}u=p.ch?"https://www.youtube.com/channel/"+p.ch:"https://www.youtube.com/"+p.h}
  else if(!/^https:\/\/\S+$/.test(u)){$("ser").textContent="Ссылка должна начинаться с https://";return}
- let n=$("sn").value.trim();if(!n){try{n=new URL(u).host}catch(_){n=u}}
- const{error}=await sb.from("sources").insert({kind:k,url:u,name:n});if(error){$("ser").textContent=error.code==="23505"?"Такой источник уже добавлен":error.message;return}cm();render()}
+ let n=$("sn").value.trim();if(!n){if(tg)n="@"+tg+" (Telegram)";else try{n=new URL(u).host}catch(_){n=u}}
+ const{error}=await sb.from("sources").insert({kind:k==="telegram"?"site":k,url:u,name:n});if(error){$("ser").textContent=error.code==="23505"?"Такой источник уже добавлен":error.message;return}cm();render()}
 
 /* --- закон --- */
 const LAW={RU:["Россия","Реклама азартных игр и букмекерских услуг жёстко регулируется (ФЗ «О рекламе», ст. 27, и закон об азартных играх). Публикация промокодов третьими лицами может считаться рекламой. Продвигать допустимо только легальных операторов."],KZ:["Казахстан","Реклама азартных игр и пари ограничена законом. Публикация промокодов может считаться рекламой: проконсультируйтесь с юристом."],BY:["Беларусь","Реклама азартных игр и ставок ограничена законом; допускается только для лицензированных операторов."],UA:["Украина","Деятельность и реклама регулируются отдельным законом об азартных играх и лицензированием."],GB:["Великобритания","Операторы лицензируются UKGC; реклама подчиняется правилам ASA/CAP: только 18+, без вводящих в заблуждение условий."],US:["США","Регулирование по штатам: в части штатов ставки и их реклама запрещены или требуют лицензии. Нужна геопроверка и анализ каждого штата."],XX:["Другая страна","Проверьте местные требования к лицензированию, рекламе и возрасту до публикации."]};
